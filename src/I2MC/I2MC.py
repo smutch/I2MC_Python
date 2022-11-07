@@ -1312,19 +1312,20 @@ def I2MC(gazeData, options = None, logging=True, logging_offset=""):
 
     par  = {}
     
-    # Check required parameters 
+    # Check required parameters and extract 
     check_fun('xres',     opt, 'horizontal screen resolution')
     check_fun('yres',     opt, 'vertical screen resolution')
     check_fun('freq',     opt, 'tracker sampling rate')
     check_fun('missingx', opt, 'value indicating data loss for horizontal position')
     check_fun('missingy', opt, 'value indicating data loss for vertical position')
-    
-    # required parameters:
     par['xres']             = opt.pop('xres')
     par['yres']             = opt.pop('yres')
     par['freq']             = opt.pop('freq')
     par['missingx']         = opt.pop('missingx')
     par['missingy']         = opt.pop('missingy')
+    
+    # parameters for the calculation of angular measures. if either or both are
+    # None, the noise measures are provided in pixels instead of degrees
     par['scrSz']            = opt.pop('scrSz', None )           # screen size (e.g. in cm). Optional, specify if want fixation statistics in deg
     par['disttoscreen']     = opt.pop('disttoscreen', None)     # screen distance (in same unit as size). Optional, specify if want fixation statistics in deg
     
