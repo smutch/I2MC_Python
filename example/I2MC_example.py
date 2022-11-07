@@ -71,7 +71,6 @@ except ImportError:
     parentdir = os.path.dirname(currentdir)
     sys.path.insert(0, os.path.join(parentdir,'src'))
     import I2MC
-import I2MC.plot
 import matplotlib.pyplot as plt
 import time 
 start = time.time()
@@ -87,7 +86,7 @@ opt['missingx']     = -opt['xres']          # missing value for horizontal posit
 opt['missingy']     = -opt['yres']          # missing value for vertical position in eye-tracking data (example data uses -yres). used throughout algorithm as signal for data loss
 opt['freq']         = 300.0                 # sampling frequency of data (check that this value matches with values actually obtained from measurement!)
 
-# Variables for the calculation of visual angle
+# Variables for the calculation of angular measures
 # These values are used to calculate noise measures (RMS and BCEA) of
 # fixations. The may be left as is, but don't use the noise measures then.
 # If either or both are empty, the noise measures are provided in pixels
@@ -125,6 +124,7 @@ opt['steptime']             = 0.02                          # time window shift 
 opt['maxerrors']            = 100                           # maximum number of errors allowed in k-means clustering procedure before proceeding to next file
 opt['downsamples']          = [2, 5, 10]
 opt['downsampFilter']       = False                         # use chebychev filter when downsampling? Its what matlab's downsampling functions do, but could cause trouble (ringing) with the hard edges in eye-movement data
+opt['chebyOrder']           = 8.                            # order of cheby1 Chebyshev downsampling filter, default is normally ok, as long as there are 25 or more samples in the window (you may have less if your data is of low sampling rate or your window is small)
 
 # # FIXATION DETERMINATION
 opt['cutoffstd']            = 2.0                           # number of standard deviations above mean k-means weights will be used as fixation cutoff
