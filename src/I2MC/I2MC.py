@@ -1350,7 +1350,7 @@ def I2MC(gazeData, options = None, logging=True, logging_offset=""):
     par['minFixDur']        = opt.pop('minFixDur', 40.)         # minimum fixation duration (ms) after merging, fixations with shorter duration are removed from output
       
     # Development parameters, change these to False when not developing
-    par['skip_inputhandeling']  = opt.pop('skip_inputhandeling', False)
+    par['skip_inputhandling']  = opt.pop('skip_inputhandling', False)
 
     for key in opt:
         assert False, 'Key "{}" not recognized'.format(key)
@@ -1359,7 +1359,7 @@ def I2MC(gazeData, options = None, logging=True, logging_offset=""):
     # # Input handeling and checking
     # =============================================================================
     ## loop over input
-    if not par['skip_inputhandeling']:
+    if not par['skip_inputhandling']:
         for key, value in par.items():
             if key in ['xres','yres','freq','missingx','missingy','windowtimeInterp','maxdisp','windowtime',
                        'steptime','cutoffstd','onoffsetThresh','maxMergeDist','maxMergeTime','minFixDur']:
