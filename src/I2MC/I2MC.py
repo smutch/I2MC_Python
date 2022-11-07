@@ -933,7 +933,7 @@ def get_fixations(final_weights, timestamp, xpos, ypos, missing, par):
         {'cutoff': 0.1355980099309374,
          'dur': array([366.599, 773.2  , 239.964, 236.608, 299.877, 126.637]),
          'end': array([111, 349, 433, 508, 600, 643]),
-         'endT': array([ 369.919, 1163.169, 1443.106, 1693.062, 1999.738, 2142.977]),
+         'endT': array([373.284, 1166.525, 1446.462, 1696.398, 2002.993, 2146.306]),
          'flankdataloss': array([1., 0., 0., 0., 0., 0.]),
          'fracinterped': array([0.06363636, 0.        , 0.        , 0.        , 0.        ,
                 0.        ]),
@@ -1037,18 +1037,19 @@ def get_fixations(final_weights, timestamp, xpos, ypos, missing, par):
         if missing[fixend[p]]:
             fixend[p] = fixend[p] - (np.argmax(np.invert(missing[fixstart[p]:fixend[p]+1][::-1]))+1)
             endtime[p] = timestamp[fixend[p]]
-    
-    ### calculate fixation duration
-    # if you calculate fixation duration by means of time of last sample during
-    # fixation minus time of first sample during fixation (our fixation markers
-    # are inclusive), then you always underestimate fixation duration by one
-    # sample because you're in practice counting to the beginning of the
-    # sample, not the end of it. To solve this, as end time we need to take the
+
+    ### adjust fixation end time
+    # since our fixation markers are inclusive, endT is at the end of the sample,
+    # not at its start. At this stage in the code, endtime simply reflects the
+    # timestamp of the end sample. But such a timestamp is for the beginning of
+    # the sample, not for its end. To solve this, as end time we need to take the
     # timestamp of the sample that is one past the last sample of the fixation.
-    # so, first calculate fixation duration by simple timestamp subtraction.
-    fixdur = endtime-starttime
-    
-    # then determine what duration of this last sample was
+    # this is also important for calculating fixation duration. Without this
+    # adjustment, we would always underestimate fixation duration by one sample
+    # because you're in practice counting to the beginning of the sample, not
+    # the end of it. 
+
+    # 1. determine what the duration of each end sample was
     nextSamp = np.min(np.vstack([fixend+1,np.zeros(len(fixend),dtype=int)+len(timestamp)-1]),axis=0) # make sure we don't run off the end of the data
     extratime = timestamp[nextSamp]-timestamp[fixend] 
     
@@ -1058,9 +1059,12 @@ def get_fixations(final_weights, timestamp, xpos, ypos, missing, par):
     if not len(fixend)==0 and fixend[-1]==len(timestamp): # first check if there are fixations in the first place, or we'll index into non-existing data
         extratime[-1] = np.diff(timestamp[-3:-1])
     
-    # now add the duration of the end sample to fixation durations, so we have
-    # correct fixation durations
-    fixdur = fixdur+extratime
+    # now add the duration of the sample to each fixation end time, so that they are
+    # correct
+    endtime = endtime+extratime
+    
+    ### calculate fixation duration
+    fixdur = endtime-starttime
 
     ### check if any fixations are too short
     qTooShort = np.argwhere(fixdur<minFixDur)
@@ -1154,7 +1158,7 @@ def get_fix_stats(xpos, ypos, missing, fix, pix_per_deg = None):
      'cutoff': 0.1355980099309374,
      'dur': array([366.599, 773.2  , 239.964, 236.608, 299.877, 126.637]),
      'end': array([111, 349, 433, 508, 600, 643]),
-     'endT': array([ 369.919, 1163.169, 1443.106, 1693.062, 1999.738, 2142.977]),
+     'endT': array([373.284, 1166.525, 1446.462, 1696.398, 2002.993, 2146.306]),
      'fixRangeX': array([0.41066299, 0.99860672, 0.66199772, 0.49593727, 0.64628929,
             0.81010568]),
      'fixRangeY': array([1.58921528, 1.03885955, 1.10576059, 0.94040142, 1.21936613,
