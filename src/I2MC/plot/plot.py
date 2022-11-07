@@ -78,12 +78,14 @@ def data_and_fixations(data, fix, fix_as_line=True, unit='pixels', res=None):
         ax1.set_ylim([0, res[1]])
 
     ### Plot X position
-    for p in range(Xdat.shape[0]):
-        ax1.plot(np.array(time),Xdat[p,:],klr[p]+'-', linewidth = traceLW)
+    Xdatp = np.atleast_2d(Xdat)
+    for p in range(Xdatp.shape[0]):
+        ax1.plot(np.array(time),Xdatp[p,:],klr[p]+'-', linewidth = traceLW)
 
     ### Plot Y posiiton
-    for p in range(Ydat.shape[0]):
-        ax2.plot(np.array(time),Ydat[p,:],klr[p]+'-', linewidth = traceLW)
+    Ydatp = np.atleast_2d(Ydat)
+    for p in range(Ydatp.shape[0]):
+        ax2.plot(np.array(time),Ydatp[p,:],klr[p]+'-', linewidth = traceLW)
     
     # add fixations
     if fix_as_line:
