@@ -10,7 +10,7 @@ import matplotlib.patches as patches
 import numpy as np
 import pandas as pd
 
-def data_and_fixations(data, fix, fix_as_line=True, res=None):
+def data_and_fixations(data, fix, fix_as_line=True, unit='pixels', res=None):
     """
     Plots the results of the I2MC function
     fix_as_line: if true, fixations are drawn as lines, if
@@ -62,14 +62,20 @@ def data_and_fixations(data, fix, fix_as_line=True, res=None):
     ## plot layout
     f   = plt.figure(figsize=(10, 6), dpi=300)
     ax1 = plt.subplot(2,1,1)
-    ax1.set_ylabel('Horizontal position (pixels)', size = myLabelSize)
-    ax1.set_xlim([0, time[-1]])
-    ax1.set_ylim([0, res[0]])
+    ax1.set_ylabel('Horizontal position ({})'.format(unit), size = myLabelSize)
+    ax1.set_xlim([time[1], time[-1]])
+    if isinstance(res[0],list):
+        ax1.set_ylim([res[0][0], res[0][1]])
+    else:
+        ax1.set_ylim([0, res[0]])
 
     ax2 = plt.subplot(2,1,2, sharex=ax1)
     ax2.set_xlabel('Time (ms)')
-    ax2.set_ylabel('Vertical position (pixels)', size = myLabelSize)
-    ax2.set_ylim([0, res[1]])
+    ax2.set_ylabel('Vertical position ({})'.format(unit), size = myLabelSize)
+    if isinstance(res[1],list):
+        ax1.set_ylim([res[1][0], res[1][1]])
+    else:
+        ax1.set_ylim([0, res[1]])
 
     ### Plot X position
     for p in range(Xdat.shape[0]):
