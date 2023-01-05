@@ -63,14 +63,7 @@ import sys
 import pandas as pd
 import numpy as np
 import import_funcs as imp
-try:
-    import I2MC
-except ImportError:
-    import inspect
-    currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-    parentdir = os.path.dirname(currentdir)
-    sys.path.insert(0, os.path.join(parentdir,'src'))
-    import I2MC
+import I2MC
 import matplotlib.pyplot as plt
 import time
 start = time.time()
