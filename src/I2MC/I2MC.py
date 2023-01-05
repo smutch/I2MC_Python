@@ -215,7 +215,7 @@ def bool2bounds(b):
     >>> print(off)
     [0 6 9]
     """
-    b = np.array(np.array(b, dtype = np.bool), dtype=int)
+    b = np.array(np.array(b, dtype = bool), dtype=int)
     b = np.pad(b, (1, 1), 'constant', constant_values=(0, 0))
     D = np.diff(b)
     on  = np.array(np.where(D == 1)[0], dtype=int)
