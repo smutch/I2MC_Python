@@ -18,24 +18,24 @@ Created on Thu Sep 19 10:57:23 2019
 # The I2MC algorithm was designed to accomplish fixation detection in data
 # across a wide range of noise levels and when periods of data loss may
 # occur.
-# 
+#
 # Cite as:
 # Hessels, R.S., Niehorster, D.C., Kemner, C., & Hooge, I.T.C., (2017).
-# Noise-robust fixation detection in eye-movement data - Identification by 
+# Noise-robust fixation detection in eye-movement data - Identification by
 # 2-means clustering (I2MC). Behavior Research Methods, 49(5):1802-1823.
-# 
+#
 # For more information, questions, or to check whether we have updated to a
 # better version, see https://github.com/dcnieho/I2MC_Python. I2MC can be
 # installed using pip install I2MC
-# 
+#
 # Most parts of the I2MC algorithm are licensed under the Creative Commons
-# Attribution 4.0 (CC BY 4.0) license. Some functions are under MIT 
+# Attribution 4.0 (CC BY 4.0) license. Some functions are under MIT
 # license, and some may be under other licenses.
-# 
+#
 # Quick start guide for adopting this script for your own data:
 # 1) Build an import function specific for your data (see importTobiiTX300
-# for an example). 
-# 
+# for an example).
+#
 # 2) Change the line calling the data import function under the comment
 # "IMPORT DATA" to use your new import function. The format should be:
 #
@@ -43,16 +43,16 @@ Created on Thu Sep 19 10:57:23 2019
 # data['L_X'] & data['L_Y'] for left gaze coordinates
 # data['R_X'] & data['R_Y'] for right gaze coordinates
 # data['average_X'] & data['average_Y'] for average gaze coordinates
-# 
+#
 # You may provide coordinates from both eyes, only the left, only the
 # right, or only the average.
 # Gaze coordinates should be in pixels, timestamps should be in milliseconds
-# 
+#
 # 3) Adjust the variables in the "necessary variables" section to match your
 #    data
 # 4) Run the algorithm
-# 
-# 
+#
+#
 # Tested on Python 3.8
 
 # =============================================================================
@@ -72,7 +72,7 @@ except ImportError:
     sys.path.insert(0, os.path.join(parentdir,'src'))
     import I2MC
 import matplotlib.pyplot as plt
-import time 
+import time
 start = time.time()
 
 # =============================================================================
@@ -139,8 +139,8 @@ opt['minFixDur']            = 40.0                          # minimum fixation d
 # =============================================================================
 # Check if output directory exists, if not create it
 if not os.path.isdir(folders['output']):
-   os.mkdir(folders['output'])
-   
+    os.mkdir(folders['output'])
+
 # Get all participant folders
 fold = list(os.walk(folders['data']))
 all_folders = [f[0] for f in fold[1:]]
@@ -150,7 +150,7 @@ number_of_folders = len(all_folders)
 all_files = [f[2] for f in fold[1:]]
 number_of_files = [len(f) for f in all_files]
 
-# Write the final fixation output file 
+# Write the final fixation output file
 fix_file = os.path.join(folders['output'], 'allfixations.txt')
 for it in range(1,101):
     if os.path.isfile(fix_file) and it < 100:
@@ -159,7 +159,7 @@ for it in range(1,101):
         if log_level>0:
             print('Fixations will be stored to: "{}"'.format(fix_file))
         break
-    
+
 # =============================================================================
 # START ALGORITHM
 # =============================================================================
@@ -171,13 +171,13 @@ for folder_idx, folder in enumerate(all_folders):
     if do_plot_data:
         outFold = os.path.join(folders['output'], (folder.split(os.sep)[-1]))
         if not os.path.isdir(outFold):
-           os.mkdir(outFold)
+            os.mkdir(outFold)
 
     if number_of_files[folder_idx] == 0:
         if log_level>0:
             print('  folder is empty, continuing to next folder')
         continue
-    
+
     for file_idx, file in enumerate(all_files[folder_idx]):
         if log_level>0:
             print('  Processing file {} of {}'.format(file_idx + 1, number_of_files[folder_idx]))
@@ -188,13 +188,13 @@ for folder_idx, folder in enumerate(all_folders):
         if log_level>0:
             print('    Loading data from: {}'.format(file_name))
         data = imp.tobii_TX300(file_name, [opt['xres'], opt['yres']])
-        
+
         # check whether we have data, if not, continue to next file
-        if len(data['time']) == 0: 
+        if len(data['time']) == 0:
             if log_level>0:
                 print('    No data found in file')
             continue
-        
+
         # RUN FIXATION DETECTION
         if log_level>0:
             print('    Running fixation classification...')
@@ -208,7 +208,7 @@ for folder_idx, folder in enumerate(all_folders):
             if log_level>0:
                 print('    Fixation classification did not succeed with file {}'.format(file_name))
             continue
-        
+
         if fix != False:
             ## PLOT RESULTS
             if do_plot_data:
@@ -220,7 +220,7 @@ for folder_idx, folder in enumerate(all_folders):
                     print('    Saving image to: ' + save_file)
                 f.savefig(save_file)
                 plt.close(f)
-                
+
             # Write data to file
             fix['participant'] = folder.split(os.sep)[-1]
             fix['trial'] = os.path.splitext(file)[0]

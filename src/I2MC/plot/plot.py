@@ -25,7 +25,7 @@ def data_and_fixations(data, fix, fix_as_line=True, unit='pixels', res=None):
     if isinstance(data,dict):
         # for backward compatibility, convert to pd.DataFrame
         data = pd.DataFrame.from_dict(data)
-    
+
     time = data['time'].array
     Xdat = np.array([])
     Ydat = np.array([])
@@ -49,16 +49,16 @@ def data_and_fixations(data, fix, fix_as_line=True, unit='pixels', res=None):
         else:
             Xdat = np.vstack([Xdat, data['average_X'].array])
             Ydat = np.vstack([Ydat, data['average_Y'].array])
-        klr.append('b')   
-    
+        klr.append('b')
+
     # Plot settings
     myfontsize = 10
     myLabelSize = 12
     traceLW = 0.5
-    
+
     font = {'size': myfontsize}
     matplotlib.rc('font', **font)
-    
+
     ## plot layout
     f   = plt.figure(figsize=(10, 6), dpi=300)
     ax1 = plt.subplot(2,1,1)
@@ -86,7 +86,7 @@ def data_and_fixations(data, fix, fix_as_line=True, unit='pixels', res=None):
     Ydatp = np.atleast_2d(Ydat)
     for p in range(Ydatp.shape[0]):
         ax2.plot(np.array(time),Ydatp[p,:],klr[p]+'-', linewidth = traceLW)
-    
+
     # add fixations
     if fix_as_line:
         fixLW = 2
