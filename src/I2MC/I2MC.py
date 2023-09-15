@@ -15,6 +15,9 @@ from scipy.cluster.vq import vq, _vq
 from scipy.spatial.distance import cdist
 import copy
 import warnings
+import logging
+
+logger = logging.getLogger(__name__)
 
 # =============================================================================
 # Helper functions
@@ -634,9 +637,12 @@ def kmeans2(data):
         Del[0,:] = (m[0] / (m[0] + sgn)) * Del[0,:]
         # same for cluster 2
         sgn = -sgn          # -1 for members, 1 for nonmembers
-        if m[1] == 1:
-            sgn[np.invert(mbrs)] = 0    # prevent divide-by-zero for singleton mbrs
-        Del[1,:] = (m[1] / (m[1] + sgn)) * Del[1,:]
+        # if len(m) == 1 then we have only one cluster, so we can skip this
+        if len(m) > 1:
+            logger.warning("Hit edge case with all points in single cluster.")
+            if m[1] == 1:
+                sgn[np.invert(mbrs)] = 0    # prevent divide-by-zero for singleton mbrs
+            Del[1,:] = (m[1] / (m[1] + sgn)) * Del[1,:]
 
         # Determine best possible move, if any, for each point.  Next we
         # will pick one from those that actually did move.
