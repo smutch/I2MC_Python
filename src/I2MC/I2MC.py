@@ -639,10 +639,11 @@ def kmeans2(data):
         sgn = -sgn          # -1 for members, 1 for nonmembers
         # if len(m) == 1 then we have only one cluster, so we can skip this
         if len(m) > 1:
-            logger.warning("Hit edge case with all points in single cluster.")
             if m[1] == 1:
                 sgn[np.invert(mbrs)] = 0    # prevent divide-by-zero for singleton mbrs
             Del[1,:] = (m[1] / (m[1] + sgn)) * Del[1,:]
+        else:
+            logger.warning("Hit edge case with all points in single cluster.")
 
         # Determine best possible move, if any, for each point.  Next we
         # will pick one from those that actually did move.
